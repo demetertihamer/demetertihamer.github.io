@@ -45,11 +45,9 @@
     }
 
     .profile-picture {
-      display: grid;
       flex: 0 0 150px;
       width: 150px;
       height: 150px;
-      place-items: center;
       border: 2px dashed rgba(255, 255, 255, 0.28);
       border-radius: 50%;
       color: var(--muted);
@@ -57,6 +55,7 @@
       font-size: 0.8rem;
       letter-spacing: 0.08em;
       text-align: center;
+      object-fit: cover;
       text-transform: uppercase;
     }
 
@@ -156,9 +155,9 @@
 <body>
   <main>
     <section class="profile" aria-labelledby="profile-name">
-      <div class="profile-picture" aria-label="Profile picture placeholder">Your photo</div>
+      <img class="profile-picture" src="profile.jpg" alt="Portrait of Demeter Tihamér">
       <div class="profile-copy">
-        <h1 id="profile-name">Demeter Tihamer</h1>
+        <h1 id="profile-name">Demeter Tihamér</h1>
         <p>Welcome to my personal space on the web.</p>
       </div>
     </section>
