@@ -151,12 +151,13 @@
     .project-arrow {
       position: absolute;
       top: 50%;
-      right: 0;
+      right: 0.5rem;
       z-index: 1;
       display: grid;
       width: 3rem;
       height: 3rem;
       place-items: center;
+      padding: 0;
       border: 1px solid var(--border);
       border-radius: 50%;
       color: var(--text);
@@ -324,13 +325,14 @@
     let resumeTimer;
 
     function isAtEnd() {
-      return projectGrid.scrollLeft >= projectGrid.scrollWidth - projectGrid.clientWidth - 1;
+      const lastCard = projectCards[projectCards.length - 1];
+      return lastCard.offsetLeft + lastCard.offsetWidth <= projectGrid.scrollLeft + projectGrid.clientWidth + 1;
     }
 
     function updateArrow() {
       const atEnd = isAtEnd();
       projectArrow.innerHTML = `<span aria-hidden="true">${atEnd ? "&larr;" : "&rarr;"}</span>`;
-      projectArrow.setAttribute("aria-label", atEnd ? "Show first projects" : "Show next projects");
+      projectArrow.setAttribute("aria-label", atEnd ? "Show previous projects" : "Show next projects");
     }
 
     function pauseForManualScroll() {
@@ -360,8 +362,13 @@
     projectArrow.addEventListener("click", () => {
       manualPause = true;
       clearTimeout(resumeTimer);
+      const cardGap = parseFloat(getComputedStyle(projectGrid).columnGap) || 0;
+      const cardStep = projectCards[0].offsetWidth + cardGap;
+      const direction = isAtEnd() ? -1 : 1;
+      const target = projectGrid.scrollLeft + direction * cardStep * 3;
+
       projectGrid.scrollTo({
-        left: isAtEnd() ? 0 : projectGrid.scrollWidth - projectGrid.clientWidth,
+        left: Math.max(0, Math.min(target, projectGrid.scrollWidth - projectGrid.clientWidth)),
         behavior: "smooth"
       });
       resumeTimer = setTimeout(() => {
