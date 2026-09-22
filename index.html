@@ -1,15 +1,188 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Az oldalam</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demeter Tihamer | Portfolio</title>
   <style>
-    body { font-family: sans-serif; text-align: center; padding-top: 50px; background: #0f172a; color: #fff; }
-    h1 { color: #38bdf8; }
+    :root {
+      color-scheme: dark;
+      --background: #25282d;
+      --surface: #30343a;
+      --surface-light: #3a3f46;
+      --text: #f1f3f5;
+      --muted: #adb3bb;
+      --accent: #92b8c9;
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--background);
+    }
+
+    main {
+      width: min(100% - 2rem, 980px);
+      margin: 0 auto;
+      padding: 5rem 0 4rem;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      min-height: 220px;
+      text-align: left;
+    }
+
+    .profile-picture {
+      display: grid;
+      flex: 0 0 150px;
+      width: 150px;
+      height: 150px;
+      place-items: center;
+      border: 2px dashed rgba(255, 255, 255, 0.28);
+      border-radius: 50%;
+      color: var(--muted);
+      background: var(--surface);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .profile-copy h1 {
+      margin: 0;
+      font-size: clamp(2.25rem, 6vw, 4.5rem);
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      line-height: 1;
+    }
+
+    .profile-copy p {
+      margin: 1rem 0 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .projects {
+      margin-top: 5rem;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.8rem;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: 1.6rem;
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .project-card {
+      min-height: 190px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      background: var(--surface);
+      transition: border-color 180ms ease, transform 180ms ease;
+    }
+
+    .project-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+
+    .project-card h3 {
+      margin: 0 0 0.65rem;
+      color: var(--accent);
+      font-size: 1.1rem;
+    }
+
+    .project-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 680px) {
+      main {
+        padding-top: 3rem;
+      }
+
+      .profile {
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+      }
+
+      .project-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-heading {
+        align-items: start;
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Helló, ez az új GitHub oldalam!</h1>
-  <p>Sikeresen elindult a GitHub Pages oldalam.</p>
+  <main>
+    <section class="profile" aria-labelledby="profile-name">
+      <div class="profile-picture" aria-label="Profile picture placeholder">Your photo</div>
+      <div class="profile-copy">
+        <h1 id="profile-name">Demeter Tihamer</h1>
+        <p>Welcome to my personal space on the web.</p>
+      </div>
+    </section>
+
+    <section class="projects" aria-labelledby="projects-title">
+      <div class="section-heading">
+        <h2 id="projects-title">Projects</h2>
+        <p>A place for the work I’m building.</p>
+      </div>
+      <div class="project-grid">
+        <article class="project-card">
+          <h3>Project one</h3>
+          <p>Add a short description of your project here.</p>
+        </article>
+        <article class="project-card">
+          <h3>Project two</h3>
+          <p>Add a short description of your project here.</p>
+        </article>
+        <article class="project-card">
+          <h3>Project three</h3>
+          <p>Add a short description of your project here.</p>
+        </article>
+      </div>
+    </section>
+  </main>
 </body>
 </html>
