@@ -144,6 +144,47 @@
       font-size: 0.95rem;
     }
 
+    .contact {
+      margin-top: 5rem;
+    }
+
+    .contact-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin: 0;
+    }
+
+    .contact-item {
+      margin: 0;
+      padding: 1.25rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      background: var(--surface);
+    }
+
+    .contact-item dt {
+      margin-bottom: 0.35rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .contact-item dd {
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .contact-item a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .contact-item a:hover {
+      text-decoration: underline;
+    }
+
     @media (max-width: 680px) {
       main {
         padding-top: 3rem;
@@ -158,6 +199,10 @@
       .section-heading {
         align-items: start;
         flex-direction: column;
+      }
+
+      .contact-list {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -206,12 +251,36 @@
         </article>
       </div>
     </section>
+
+    <section class="contact" aria-labelledby="contact-title">
+      <div class="section-heading">
+        <h2 id="contact-title">Contact</h2>
+        <p>Get in touch with me.</p>
+      </div>
+      <dl class="contact-list">
+        <div class="contact-item">
+          <dt>Phone</dt>
+          <dd><a href="tel:+40700000000">Add your phone number</a></dd>
+        </div>
+        <div class="contact-item">
+          <dt>LinkedIn</dt>
+          <dd><a href="https://www.linkedin.com/in/tihamer-demeter-a6432b325/" target="_blank" rel="noreferrer">Tihamer Demeter</a></dd>
+        </div>
+        <div class="contact-item">
+          <dt>Email</dt>
+          <dd><a href="mailto:demetertihamer132@gmail.com">demetertihamer132@gmail.com</a></dd>
+        </div>
+        <div class="contact-item">
+          <dt>Location</dt>
+          <dd>Romania, Mures county</dd>
+        </div>
+      </dl>
+    </section>
   </main>
   <script>
     const projectGrid = document.querySelector(".project-grid");
     const projectCards = document.querySelectorAll(".project-card");
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let isPaused = reduceMotion.matches;
+    let isHovered = false;
     let manualPause = false;
     let isResetting = false;
     let lastTime = 0;
@@ -225,9 +294,7 @@
       manualPause = true;
       clearTimeout(resumeTimer);
       resumeTimer = setTimeout(() => {
-        if (!isAtEnd()) {
-          manualPause = false;
-        }
+        manualPause = false;
       }, 1800);
     }
 
@@ -237,11 +304,11 @@
 
     projectCards.forEach((card) => {
       card.addEventListener("mouseenter", () => {
-        isPaused = true;
+        isHovered = true;
       });
 
       card.addEventListener("mouseleave", () => {
-        isPaused = reduceMotion.matches || manualPause;
+        isHovered = false;
       });
     });
 
@@ -268,7 +335,7 @@
         lastTime = timestamp;
       }
 
-      if (!isPaused && !manualPause && !isResetting) {
+      if (!isHovered && !manualPause && !isResetting) {
         const elapsed = timestamp - lastTime;
         projectGrid.scrollLeft += elapsed * 0.035;
 
@@ -281,10 +348,6 @@
       lastTime = timestamp;
       requestAnimationFrame(autoScroll);
     }
-
-    reduceMotion.addEventListener("change", (event) => {
-      isPaused = event.matches;
-    });
 
     requestAnimationFrame(autoScroll);
   </script>
