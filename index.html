@@ -109,6 +109,11 @@
       padding: 0.25rem 0.25rem 1rem;
       scroll-snap-type: x proximity;
       scrollbar-color: var(--accent) var(--surface);
+      scrollbar-width: none;
+    }
+
+    .project-grid::-webkit-scrollbar {
+      display: none;
     }
 
     .project-card {
@@ -202,5 +207,46 @@
       </div>
     </section>
   </main>
+  <script>
+    const projectGrid = document.querySelector(".project-grid");
+    const projectCards = document.querySelectorAll(".project-card");
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let isPaused = reduceMotion.matches;
+    let lastTime = 0;
+
+    projectCards.forEach((card) => {
+      card.addEventListener("mouseenter", () => {
+        isPaused = true;
+      });
+
+      card.addEventListener("mouseleave", () => {
+        isPaused = reduceMotion.matches;
+      });
+    });
+
+    function autoScroll(timestamp) {
+      if (!lastTime) {
+        lastTime = timestamp;
+      }
+
+      if (!isPaused) {
+        const elapsed = timestamp - lastTime;
+        projectGrid.scrollLeft += elapsed * 0.035;
+
+        if (projectGrid.scrollLeft >= projectGrid.scrollWidth - projectGrid.clientWidth) {
+          projectGrid.scrollLeft = 0;
+        }
+      }
+
+      lastTime = timestamp;
+      requestAnimationFrame(autoScroll);
+    }
+
+    reduceMotion.addEventListener("change", (event) => {
+      isPaused = event.matches;
+    });
+
+    requestAnimationFrame(autoScroll);
+  </script>
 </body>
 </html>
