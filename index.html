@@ -106,7 +106,7 @@
       display: flex;
       gap: 1rem;
       overflow-x: auto;
-      padding: 0.25rem 0.25rem 1rem;
+      padding: 0.25rem 3.75rem 1rem 0.25rem;
       scroll-snap-type: x proximity;
       scrollbar-color: var(--accent) var(--surface);
       scrollbar-width: none;
@@ -142,6 +142,37 @@
       margin: 0;
       color: var(--muted);
       font-size: 0.95rem;
+    }
+
+    .projects-carousel {
+      position: relative;
+    }
+
+    .project-arrow {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      z-index: 1;
+      display: grid;
+      width: 3rem;
+      height: 3rem;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--text);
+      background: var(--surface-light);
+      box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      font-size: 1.5rem;
+      line-height: 1;
+      transform: translateY(-50%);
+      transition: background 180ms ease, border-color 180ms ease;
+    }
+
+    .project-arrow:hover {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: var(--background);
     }
 
     .contact {
@@ -224,31 +255,36 @@
         <h2 id="projects-title">Projects</h2>
         <p>A place for the work I’m building.</p>
       </div>
-      <div class="project-grid">
-        <article class="project-card">
-          <h3>Project one</h3>
-          <p>Add a short description of your project here.</p>
-        </article>
-        <article class="project-card">
-          <h3>Project two</h3>
-          <p>Add a short description of your project here.</p>
-        </article>
-        <article class="project-card">
-          <h3>Project three</h3>
-          <p>Add a short description of your project here.</p>
-        </article>
-        <article class="project-card">
-          <h3>Project four</h3>
-          <p>Add a short description of your project here.</p>
-        </article>
-        <article class="project-card">
-          <h3>Project five</h3>
-          <p>Add a short description of your project here.</p>
-        </article>
-        <article class="project-card">
-          <h3>Project six</h3>
-          <p>Add a short description of your project here.</p>
-        </article>
+      <div class="projects-carousel">
+        <div class="project-grid" id="projects-list">
+          <article class="project-card">
+            <h3>Project one</h3>
+            <p>Add a short description of your project here.</p>
+          </article>
+          <article class="project-card">
+            <h3>Project two</h3>
+            <p>Add a short description of your project here.</p>
+          </article>
+          <article class="project-card">
+            <h3>Project three</h3>
+            <p>Add a short description of your project here.</p>
+          </article>
+          <article class="project-card">
+            <h3>Project four</h3>
+            <p>Add a short description of your project here.</p>
+          </article>
+          <article class="project-card">
+            <h3>Project five</h3>
+            <p>Add a short description of your project here.</p>
+          </article>
+          <article class="project-card">
+            <h3>Project six</h3>
+            <p>Add a short description of your project here.</p>
+          </article>
+        </div>
+        <button class="project-arrow" type="button" aria-label="Show next projects" aria-controls="projects-list">
+          <span aria-hidden="true">&rarr;</span>
+        </button>
       </div>
     </section>
 
@@ -280,6 +316,7 @@
   <script>
     const projectGrid = document.querySelector(".project-grid");
     const projectCards = document.querySelectorAll(".project-card");
+    const projectArrow = document.querySelector(".project-arrow");
     let isHovered = false;
     let manualPause = false;
     let isResetting = false;
@@ -288,6 +325,12 @@
 
     function isAtEnd() {
       return projectGrid.scrollLeft >= projectGrid.scrollWidth - projectGrid.clientWidth - 1;
+    }
+
+    function updateArrow() {
+      const atEnd = isAtEnd();
+      projectArrow.innerHTML = `<span aria-hidden="true">${atEnd ? "&larr;" : "&rarr;"}</span>`;
+      projectArrow.setAttribute("aria-label", atEnd ? "Show first projects" : "Show next projects");
     }
 
     function pauseForManualScroll() {
@@ -310,6 +353,20 @@
       card.addEventListener("mouseleave", () => {
         isHovered = false;
       });
+    });
+
+    projectGrid.addEventListener("scroll", updateArrow, { passive: true });
+
+    projectArrow.addEventListener("click", () => {
+      manualPause = true;
+      clearTimeout(resumeTimer);
+      projectGrid.scrollTo({
+        left: isAtEnd() ? 0 : projectGrid.scrollWidth - projectGrid.clientWidth,
+        behavior: "smooth"
+      });
+      resumeTimer = setTimeout(() => {
+        manualPause = false;
+      }, 1800);
     });
 
     function animateReset(startTime) {
@@ -347,6 +404,7 @@
 
       lastTime = timestamp;
       requestAnimationFrame(autoScroll);
+      updateArrow();
     }
 
     requestAnimationFrame(autoScroll);
