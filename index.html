@@ -212,7 +212,28 @@
     const projectCards = document.querySelectorAll(".project-card");
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let isPaused = reduceMotion.matches;
+    let manualPause = false;
+    let isResetting = false;
     let lastTime = 0;
+    let resumeTimer;
+
+    function isAtEnd() {
+      return projectGrid.scrollLeft >= projectGrid.scrollWidth - projectGrid.clientWidth - 1;
+    }
+
+    function pauseForManualScroll() {
+      manualPause = true;
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(() => {
+        if (!isAtEnd()) {
+          manualPause = false;
+        }
+      }, 1800);
+    }
+
+    ["wheel", "touchstart", "pointerdown", "keydown"].forEach((eventName) => {
+      projectGrid.addEventListener(eventName, pauseForManualScroll);
+    });
 
     projectCards.forEach((card) => {
       card.addEventListener("mouseenter", () => {
@@ -220,21 +241,40 @@
       });
 
       card.addEventListener("mouseleave", () => {
-        isPaused = reduceMotion.matches;
+        isPaused = reduceMotion.matches || manualPause;
       });
     });
+
+    function animateReset(startTime) {
+      if (!isResetting) {
+        return;
+      }
+
+      const progress = Math.min((performance.now() - startTime) / 450, 1);
+      const easedProgress = 1 - Math.pow(1 - progress, 3);
+      projectGrid.scrollLeft = projectGrid.scrollWidth - projectGrid.clientWidth;
+      projectGrid.scrollLeft *= 1 - easedProgress;
+
+      if (progress < 1) {
+        requestAnimationFrame(() => animateReset(startTime));
+      } else {
+        isResetting = false;
+        lastTime = performance.now();
+      }
+    }
 
     function autoScroll(timestamp) {
       if (!lastTime) {
         lastTime = timestamp;
       }
 
-      if (!isPaused) {
+      if (!isPaused && !manualPause && !isResetting) {
         const elapsed = timestamp - lastTime;
         projectGrid.scrollLeft += elapsed * 0.035;
 
-        if (projectGrid.scrollLeft >= projectGrid.scrollWidth - projectGrid.clientWidth) {
-          projectGrid.scrollLeft = 0;
+        if (isAtEnd()) {
+          isResetting = true;
+          requestAnimationFrame(() => animateReset(performance.now()));
         }
       }
 
