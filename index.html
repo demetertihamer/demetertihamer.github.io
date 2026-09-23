@@ -59,7 +59,7 @@
       height: 100%;
       object-fit: cover;
       object-position: 55% 18%;
-      transform: scale(2);
+      transform: scale(2.5);
       transform-origin: 55% 18%;
     }
 
@@ -89,6 +89,12 @@
       margin-bottom: 1.5rem;
       border-bottom: 1px solid var(--border);
       padding-bottom: 0.8rem;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
     }
 
     .section-heading h2 {
@@ -145,29 +151,25 @@
       font-size: 0.95rem;
     }
 
-    .projects-carousel {
-      position: relative;
+    .project-controls {
+      display: grid;
+      grid-template-columns: repeat(2, 2.75rem);
+      gap: 0.65rem;
     }
 
     .project-arrow {
-      position: absolute;
-      top: 50%;
-      right: 0.5rem;
-      z-index: 1;
       display: grid;
-      width: 3rem;
-      height: 3rem;
+      width: 2.75rem;
+      height: 2.75rem;
       place-items: center;
       padding: 0;
       border: 1px solid var(--border);
       border-radius: 50%;
       color: var(--text);
       background: var(--surface-light);
-      box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.25);
       cursor: pointer;
       font-size: 1.5rem;
       line-height: 1;
-      transform: translateY(-50%);
       transition: background 180ms ease, border-color 180ms ease;
     }
 
@@ -230,8 +232,12 @@
       }
 
       .section-heading {
-        align-items: start;
+        align-items: flex-start;
         flex-direction: column;
+      }
+
+      .section-title {
+        gap: 1rem;
       }
 
       .contact-list {
@@ -254,11 +260,20 @@
 
     <section class="projects" aria-labelledby="projects-title">
       <div class="section-heading">
-        <h2 id="projects-title">Projects</h2>
+        <div class="section-title">
+          <h2 id="projects-title">Projects</h2>
+          <div class="project-controls" aria-label="Project navigation">
+            <button class="project-arrow" type="button" data-direction="-1" aria-label="Show previous projects" aria-controls="projects-list">
+              <span aria-hidden="true">&larr;</span>
+            </button>
+            <button class="project-arrow" type="button" data-direction="1" aria-label="Show next projects" aria-controls="projects-list">
+              <span aria-hidden="true">&rarr;</span>
+            </button>
+          </div>
+        </div>
         <p>A place for the work I’m building.</p>
       </div>
-      <div class="projects-carousel">
-        <div class="project-grid" id="projects-list">
+      <div class="project-grid" id="projects-list">
           <article class="project-card">
             <h3>Project one</h3>
             <p>Add a short description of your project here.</p>
@@ -283,10 +298,6 @@
             <h3>Project six</h3>
             <p>Add a short description of your project here.</p>
           </article>
-        </div>
-        <button class="project-arrow" type="button" aria-label="Show next projects" aria-controls="projects-list">
-          <span aria-hidden="true">&rarr;</span>
-        </button>
       </div>
     </section>
 
@@ -318,7 +329,7 @@
   <script>
     const projectGrid = document.querySelector(".project-grid");
     const projectCards = document.querySelectorAll(".project-card");
-    const projectArrow = document.querySelector(".project-arrow");
+    const projectArrows = document.querySelectorAll(".project-arrow");
     let isHovered = false;
     let manualPause = false;
     let lastTime = 0;
@@ -326,12 +337,6 @@
 
     function isAtEnd() {
       return projectGrid.scrollLeft >= projectGrid.scrollWidth - projectGrid.clientWidth - 1;
-    }
-
-    function updateArrow() {
-      const atEnd = isAtEnd();
-      projectArrow.innerHTML = `<span aria-hidden="true">${atEnd ? "&larr;" : "&rarr;"}</span>`;
-      projectArrow.setAttribute("aria-label", atEnd ? "Show previous projects" : "Show next projects");
     }
 
     function pauseForManualScroll() {
@@ -356,25 +361,24 @@
       });
     });
 
-    projectGrid.addEventListener("scroll", updateArrow, { passive: true });
+    projectArrows.forEach((arrow) => {
+      arrow.addEventListener("click", (event) => {
+        event.preventDefault();
+        manualPause = true;
+        clearTimeout(resumeTimer);
+        const cardGap = parseFloat(getComputedStyle(projectGrid).columnGap) || 0;
+        const cardStep = projectCards[0].offsetWidth + cardGap;
+        const direction = Number(arrow.dataset.direction);
+        const target = projectGrid.scrollLeft + direction * cardStep * 3;
 
-    projectArrow.addEventListener("click", (event) => {
-      event.preventDefault();
-      manualPause = true;
-      isHovered = false;
-      clearTimeout(resumeTimer);
-      const cardGap = parseFloat(getComputedStyle(projectGrid).columnGap) || 0;
-      const cardStep = projectCards[0].offsetWidth + cardGap;
-      const direction = isAtEnd() ? -1 : 1;
-      const target = projectGrid.scrollLeft + direction * cardStep * 3;
-
-      projectGrid.scrollLeft = Math.max(
-        0,
-        Math.min(target, projectGrid.scrollWidth - projectGrid.clientWidth)
-      );
-      resumeTimer = setTimeout(() => {
-        manualPause = false;
-      }, 1800);
+        projectGrid.scrollTo({
+          left: Math.max(0, Math.min(target, projectGrid.scrollWidth - projectGrid.clientWidth)),
+          behavior: "smooth"
+        });
+        resumeTimer = setTimeout(() => {
+          manualPause = false;
+        }, 1800);
+      });
     });
 
     function autoScroll(timestamp) {
@@ -392,7 +396,6 @@
 
       lastTime = timestamp;
       requestAnimationFrame(autoScroll);
-      updateArrow();
     }
 
     requestAnimationFrame(autoScroll);
