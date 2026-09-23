@@ -48,7 +48,7 @@
       flex: 0 0 150px;
       width: 150px;
       height: 150px;
-      border: 2px dashed rgba(255, 255, 255, 0.28);
+      border: 2px solid rgba(255, 255, 255, 0.28);
       border-radius: 50%;
       background: var(--surface);
       overflow: hidden;
@@ -320,13 +320,11 @@
     const projectArrow = document.querySelector(".project-arrow");
     let isHovered = false;
     let manualPause = false;
-    let isResetting = false;
     let lastTime = 0;
     let resumeTimer;
 
     function isAtEnd() {
-      const lastCard = projectCards[projectCards.length - 1];
-      return lastCard.offsetLeft + lastCard.offsetWidth <= projectGrid.scrollLeft + projectGrid.clientWidth + 1;
+      return projectGrid.scrollLeft >= projectGrid.scrollWidth - projectGrid.clientWidth - 1;
     }
 
     function updateArrow() {
@@ -376,37 +374,17 @@
       }, 1800);
     });
 
-    function animateReset(startTime) {
-      if (!isResetting) {
-        return;
-      }
-
-      const progress = Math.min((performance.now() - startTime) / 450, 1);
-      const easedProgress = 1 - Math.pow(1 - progress, 3);
-      projectGrid.scrollLeft = projectGrid.scrollWidth - projectGrid.clientWidth;
-      projectGrid.scrollLeft *= 1 - easedProgress;
-
-      if (progress < 1) {
-        requestAnimationFrame(() => animateReset(startTime));
-      } else {
-        isResetting = false;
-        lastTime = performance.now();
-      }
-    }
-
     function autoScroll(timestamp) {
       if (!lastTime) {
         lastTime = timestamp;
       }
 
-      if (!isHovered && !manualPause && !isResetting) {
+      if (!isHovered && !manualPause && !isAtEnd()) {
         const elapsed = timestamp - lastTime;
-        projectGrid.scrollLeft += elapsed * 0.035;
-
-        if (isAtEnd()) {
-          isResetting = true;
-          requestAnimationFrame(() => animateReset(performance.now()));
-        }
+        projectGrid.scrollLeft = Math.min(
+          projectGrid.scrollLeft + elapsed * 0.035,
+          projectGrid.scrollWidth - projectGrid.clientWidth
+        );
       }
 
       lastTime = timestamp;
