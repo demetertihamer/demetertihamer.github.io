@@ -107,6 +107,7 @@
       gap: 1rem;
       overflow-x: auto;
       padding: 0.25rem 3.75rem 1rem 0.25rem;
+      scroll-behavior: smooth;
       scroll-snap-type: x proximity;
       scrollbar-color: var(--accent) var(--surface);
       scrollbar-width: none;
@@ -357,18 +358,20 @@
 
     projectGrid.addEventListener("scroll", updateArrow, { passive: true });
 
-    projectArrow.addEventListener("click", () => {
+    projectArrow.addEventListener("click", (event) => {
+      event.preventDefault();
       manualPause = true;
+      isHovered = false;
       clearTimeout(resumeTimer);
       const cardGap = parseFloat(getComputedStyle(projectGrid).columnGap) || 0;
       const cardStep = projectCards[0].offsetWidth + cardGap;
       const direction = isAtEnd() ? -1 : 1;
       const target = projectGrid.scrollLeft + direction * cardStep * 3;
 
-      projectGrid.scrollTo({
-        left: Math.max(0, Math.min(target, projectGrid.scrollWidth - projectGrid.clientWidth)),
-        behavior: "smooth"
-      });
+      projectGrid.scrollLeft = Math.max(
+        0,
+        Math.min(target, projectGrid.scrollWidth - projectGrid.clientWidth)
+      );
       resumeTimer = setTimeout(() => {
         manualPause = false;
       }, 1800);
