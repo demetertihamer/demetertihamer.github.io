@@ -198,12 +198,19 @@
       margin-top: 5rem;
     }
 
-    .resume-title {
+    .resume-languages {
+      display: grid;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .resume-language {
+      width: fit-content;
       color: var(--accent);
       text-decoration: none;
     }
 
-    .resume-title:hover {
+    .resume-language:hover {
       text-decoration: underline;
     }
 
@@ -363,8 +370,13 @@
 
     <section class="resume" aria-labelledby="resume-title">
       <div class="section-heading">
-        <h2><a class="resume-title" id="resume-title" href="CV_Tihamer_Demeter.pdf" target="_blank" rel="noreferrer">Resume</a></h2>
-        <p>View or download my CV.</p>
+        <h2 id="resume-title">Resume</h2>
+        <p>Choose a language.</p>
+      </div>
+      <div class="resume-languages">
+        <a class="resume-language" href="CV_Tihamer_Demeter_ro.pdf" target="_blank" rel="noreferrer">Romanian</a>
+        <a class="resume-language" href="CV_Tihamer_Demeter_hu.pdf" target="_blank" rel="noreferrer">Hungarian</a>
+        <a class="resume-language" href="CV_Tihamer_Demeter_en.pdf" target="_blank" rel="noreferrer">English</a>
       </div>
     </section>
   </main>
