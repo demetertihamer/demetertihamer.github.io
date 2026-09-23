@@ -151,6 +151,34 @@
       font-size: 0.95rem;
     }
 
+    .project-card.featured {
+      flex-basis: 360px;
+      min-height: 250px;
+    }
+
+    .project-tag {
+      display: inline-block;
+      margin-bottom: 0.55rem;
+      border: 1px solid rgba(146, 184, 201, 0.35);
+      border-radius: 999px;
+      padding: 0.25rem 0.7rem;
+      color: var(--accent);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .project-card ul {
+      margin: 0.8rem 0 0;
+      padding-left: 1.1rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .project-card li + li {
+      margin-top: 0.35rem;
+    }
+
     .project-controls {
       display: grid;
       grid-template-columns: repeat(2, 2.75rem);
@@ -305,9 +333,20 @@
         <p>A place for the work I’m building.</p>
       </div>
       <div class="project-grid" id="projects-list">
-          <article class="project-card">
-            <h3>Project one</h3>
-            <p>Add a short description of your project here.</p>
+          <article class="project-card featured">
+            <span class="project-tag">Featured project</span>
+            <h3>ESP32 Ventilation Control Unit</h3>
+            <p>
+              I designed and built this autonomous ventilation controller during my internship at Ecomotive Development.
+              The system monitors indoor and outdoor temperatures, humidity, and user-defined thresholds to regulate airflow
+              automatically using an ESP32, temperature sensors, a relay module, and a custom display interface.
+            </p>
+            <ul>
+              <li>Developed firmware in C++ and Arduino</li>
+              <li>Implemented safety checks, hysteresis, and debounce logic</li>
+              <li>Designed the enclosure and front panel for the final build</li>
+            </ul>
+            <p style="margin-top: 1rem;"><a href="project-esp32-ventilation.html" style="color: var(--accent); text-decoration: none; font-weight: 600;">View project →</a></p>
           </article>
           <article class="project-card">
             <h3>Project two</h3>
