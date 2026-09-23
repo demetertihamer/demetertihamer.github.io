@@ -183,6 +183,38 @@
       margin-top: 5rem;
     }
 
+    .about {
+      margin-top: 5rem;
+    }
+
+    .about p {
+      max-width: 700px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .resume {
+      margin-top: 5rem;
+    }
+
+    .resume-link {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.8rem 1.2rem;
+      border: 1px solid var(--accent);
+      border-radius: 0.5rem;
+      color: var(--text);
+      background: var(--surface);
+      text-decoration: none;
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    .resume-link:hover {
+      color: var(--background);
+      background: var(--accent);
+    }
+
     .contact-list {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -301,6 +333,17 @@
       </div>
     </section>
 
+    <section class="about" aria-labelledby="about-title">
+      <div class="section-heading">
+        <h2 id="about-title">About Me</h2>
+      </div>
+      <p>
+        I’m an undergraduate student at Sapientia University, interested in both
+        software and hardware engineering. I’m passionate about technology,
+        fitness, and cars.
+      </p>
+    </section>
+
     <section class="contact" aria-labelledby="contact-title">
       <div class="section-heading">
         <h2 id="contact-title">Contact</h2>
@@ -317,13 +360,21 @@
         </div>
         <div class="contact-item">
           <dt>Email</dt>
-          <dd><a href="mailto:demetertihamer132@gmail.com">demetertihamer132@gmail.com</a></dd>
+          <dd><a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=demetertihamer132@gmail.com" target="_blank" rel="noreferrer">demetertihamer132@gmail.com</a></dd>
         </div>
         <div class="contact-item">
           <dt>Location</dt>
           <dd>Romania, Mures county</dd>
         </div>
       </dl>
+    </section>
+
+    <section class="resume" aria-labelledby="resume-title">
+      <div class="section-heading">
+        <h2 id="resume-title">Resume</h2>
+        <p>View or download my CV.</p>
+      </div>
+      <a class="resume-link" href="resume.pdf" target="_blank" rel="noreferrer">Open my resume</a>
     </section>
   </main>
   <script>
